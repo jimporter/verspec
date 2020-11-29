@@ -6,7 +6,6 @@ from typing import Callable, List, NamedTuple, Optional, SupportsInt, Tuple
 from .baseversion import *
 from .basespecifier import *
 from .infinity import *
-from .loose import LooseVersion, LooseSpecifier
 
 __all__ = ["InvalidVersion", "InvalidSpecifier", "PythonSpecifier",
            "PythonSpecifierSet", "PythonVersion"]
@@ -433,6 +432,11 @@ class PythonSpecifier(IndividualSpecifier):
         "===": "arbitrary",
     }
 
+    def _coerce_version(self, version: UnparsedVersion) -> PythonVersion:
+        if not isinstance(version, PythonVersion):
+            version = PythonVersion(str(version))
+        return version
+
     @_require_version_compare
     def _compare_compatible(self, prospective: BaseVersion, spec: str) -> bool:
         # Compatible releases have an equivalent combination of >= and ==. That
@@ -601,7 +605,7 @@ class PythonSpecifier(IndividualSpecifier):
 
             # Parse the version, and if it is a pre-release than this
             # specifier allows pre-releases.
-            if parse(version).is_prerelease:
+            if PythonVersion(version).is_prerelease:
                 return True
 
         return False
@@ -658,20 +662,16 @@ class PythonSpecifierSet(BaseSpecifierSet):
         split_specifiers = [s.strip() for s in specifiers.split(",")
                             if s.strip()]
 
-        # Parse each individual specifier, attempting first to make it a
-        # PythonSpecifier and falling back to a LooseSpecifier.
+        # Parse each individual specifier.
         parsed: Set[BaseSpecifier] = set()
         for specifier in split_specifiers:
-            try:
-                parsed.add(PythonSpecifier(specifier))
-            except InvalidSpecifier:
-                parsed.add(LooseSpecifier(specifier))
+            parsed.add(PythonSpecifier(specifier))
 
         super().__init__(parsed, prereleases)
 
-    def _coerce_version(self, version: UnparsedVersion) -> BaseVersion:
-        if not isinstance(version, BaseVersion):
-            version = parse(version)
+    def _coerce_version(self, version: UnparsedVersion) -> PythonVersion:
+        if not isinstance(version, PythonVersion):
+            version = PythonVersion(str(version))
         return version
 
     def _filter_prereleases(
@@ -684,10 +684,6 @@ class PythonSpecifierSet(BaseSpecifierSet):
         for item in iterable:
             # Ensure that we some kind of Version class for this item.
             parsed_version = self._coerce_version(item)
-
-            # Filter out any item which is parsed as a LooseVersion
-            if isinstance(parsed_version, LooseVersion):
-                continue
 
             # Store any item which is a pre-release for later unless we've
             # already found a final version or we are accepting prereleases

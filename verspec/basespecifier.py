@@ -3,7 +3,7 @@ from typing import (Callable, Dict, Iterable, Iterator, Optional, Pattern, Set,
                     Tuple, Union)
 
 from .baseversion import BaseVersion, UnparsedVersion
-from .utils import canonicalize_version, parse
+from .utils import canonicalize_version
 
 
 CallableOperator = Callable[[BaseVersion, str], bool]
@@ -75,7 +75,7 @@ class BaseSpecifier(metaclass=abc.ABCMeta):
         """
 
 
-class IndividualSpecifier(BaseSpecifier):
+class IndividualSpecifier(BaseSpecifier, metaclass=abc.ABCMeta):
     _operators: Dict[str, str] = {}
     _regex = None  # type: Pattern
 
@@ -92,6 +92,10 @@ class IndividualSpecifier(BaseSpecifier):
 
         # Store whether or not this Specifier should accept prereleases
         self._prereleases = prereleases
+
+    @abc.abstractmethod
+    def _coerce_version(self, version: UnparsedVersion) -> BaseVersion:
+        pass
 
     def __repr__(self) -> str:
         pre = (
@@ -139,11 +143,6 @@ class IndividualSpecifier(BaseSpecifier):
             self, "_compare_{0}".format(self._operators[op])
         )
         return operator_callable
-
-    def _coerce_version(self, version: UnparsedVersion) -> BaseVersion:
-        if not isinstance(version, BaseVersion):
-            version = parse(version)
-        return version
 
     @property
     def operator(self) -> str:

@@ -6,14 +6,6 @@ import pytest
 
 from verspec.python import PythonVersion, InvalidVersion
 from verspec.loose import LooseVersion
-from verspec.utils import parse
-
-
-@pytest.mark.parametrize(
-    ("version", "klass"), [("1.0", PythonVersion), ("1-1-1", LooseVersion)]
-)
-def test_parse(version, klass):
-    assert isinstance(parse(version), klass)
 
 
 # This list must be in the correct sorting order
@@ -767,6 +759,7 @@ LOOSE_CMP_VERSIONS = [
     "1.0.post456",
     "1.1.dev1",
 ]
+
 
 class TestLooseVersion:
     @pytest.mark.parametrize("version", VERSIONS + LOOSE_VERSIONS)

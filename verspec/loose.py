@@ -182,9 +182,9 @@ class LooseSpecifierSet(BaseSpecifierSet):
 
         super().__init__(parsed, None)
 
-    def _coerce_version(self, version: UnparsedVersion) -> BaseVersion:
-        if not isinstance(version, BaseVersion):
-            version = LooseVersion(version)
+    def _coerce_version(self, version: UnparsedVersion) -> LooseVersion:
+        if not isinstance(version, LooseVersion):
+            version = LooseVersion(str(version))
         return version
 
     def _filter_prereleases(

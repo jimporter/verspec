@@ -6,7 +6,6 @@ import pytest
 from verspec.basespecifier import InvalidSpecifier
 from verspec.python import PythonVersion, PythonSpecifier, PythonSpecifierSet
 from verspec.loose import LooseVersion, LooseSpecifier, LooseSpecifierSet
-from verspec.utils import parse
 
 from .test_version import VERSIONS, LOOSE_VERSIONS
 
@@ -476,10 +475,7 @@ class TestPythonSpecifier:
         ("version", "spec", "expected"),
         [
             # Test identity comparison by itself
-            ("lolwat", "===lolwat", True),
-            ("Lolwat", "===lolwat", True),
             ("1.0", "===1.0", True),
-            ("nope", "===lolwat", False),
             ("1.0.0", "===1.0", False),
             ("1.0.dev0", "===1.0.dev0", True),
         ],
@@ -555,7 +551,7 @@ class TestPythonSpecifier:
         assert list(spec.filter(input, **kwargs)) == expected
 
     def test_specifier_explicit_loose(self):
-        assert not PythonSpecifier("==1.0").contains(LooseVersion("1.0"))
+        assert PythonSpecifier("==1.0").contains(LooseVersion("1.0"))
 
     @pytest.mark.parametrize(
         ("spec", "op"),
@@ -745,14 +741,14 @@ class TestLooseSpecifier:
 
 
 class TestPythonSpecifierSet:
-    @pytest.mark.parametrize("version", VERSIONS + LOOSE_VERSIONS)
+    @pytest.mark.parametrize("version", VERSIONS)
     def test_empty_specifier(self, version):
         spec = PythonSpecifierSet(prereleases=True)
 
         assert version in spec
         assert spec.contains(version)
-        assert parse(version) in spec
-        assert spec.contains(parse(version))
+        assert PythonVersion(version) in spec
+        assert spec.contains(PythonVersion(version))
 
     def test_specifier_prereleases_explicit(self):
         spec = PythonSpecifierSet()
@@ -803,7 +799,6 @@ class TestPythonSpecifierSet:
             ("", None, None, ["1.0a1"], ["1.0a1"]),
             ("", None, None, ["1.0", PythonVersion("2.0")],
              ["1.0", PythonVersion("2.0")]),
-            ("", None, None, ["2.0dog", "1.0"], ["1.0"]),
             # Test overriding with the prereleases parameter on filter
             ("", None, False, ["1.0a1"], []),
             (">=1.0.dev1", None, False, ["1.0", "2.0a1"], ["1.0"]),
@@ -830,10 +825,6 @@ class TestPythonSpecifierSet:
                   else {})
 
         assert list(spec.filter(input, **kwargs)) == expected
-
-    def test_loose_specifiers_combined(self):
-        spec = PythonSpecifierSet("<3,>1-1-1")
-        assert "2.0" in spec
 
     @pytest.mark.parametrize(
         ("specifier", "expected"),
@@ -1012,6 +1003,9 @@ class TestLooseSpecifierSet:
                   else {})
 
         assert list(spec.filter(input, **kwargs)) == expected
+
+    def test_specifier_explicit_python(self):
+        assert LooseSpecifier("==1.0").contains(PythonVersion("1.0"))
 
     def test_loose_specifiers_combined(self):
         spec = LooseSpecifierSet("<3,>1-1-1")

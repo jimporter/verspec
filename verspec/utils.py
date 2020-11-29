@@ -1,6 +1,6 @@
 import re
 
-from .baseversion import BaseVersion, UnparsedVersion
+from .baseversion import UnparsedVersion
 
 
 def canonicalize_version(_version: str) -> UnparsedVersion:
@@ -46,18 +46,3 @@ def canonicalize_version(_version: str) -> UnparsedVersion:
         parts.append("+{0}".format(version.local))
 
     return "".join(parts)
-
-
-def parse(version: str) -> BaseVersion:
-    """
-    Parse the given version string and return either a `PythonVersion` object
-    or a `LooseVersion` object depending on if the given version is a valid
-    PEP 440 version or a loose version.
-    """
-    from .python import InvalidVersion, PythonVersion
-    from .loose import LooseVersion
-
-    try:
-        return PythonVersion(version)
-    except InvalidVersion:
-        return LooseVersion(version)
