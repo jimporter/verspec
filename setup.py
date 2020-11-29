@@ -116,16 +116,20 @@ setup(
 
         "Intended Audience :: Developers",
 
+        "License :: OSI Approved :: Apache Software License",
         "License :: OSI Approved :: BSD License",
 
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
 
     packages=find_packages(exclude=["test", "test.*"]),
+    extras_require={
+        'test': ['coverage', 'flake8 >= 3.7', 'mypy', 'pytest', 'pretend'],
+    },
+
     cmdclass={
         "test": TestCommand,
         "coverage": CoverageCommand,

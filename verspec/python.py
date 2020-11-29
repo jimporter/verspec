@@ -1,7 +1,6 @@
-import functools
 import itertools
 import re
-from typing import Callable, List, NamedTuple, Optional, SupportsInt, Tuple
+from typing import List, NamedTuple, Optional, SupportsInt, Tuple
 
 from .baseversion import *
 from .basespecifier import *
