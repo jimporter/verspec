@@ -311,19 +311,6 @@ def _cmpkey(
     return epoch, _release, _pre, _post, _dev, _local
 
 
-def _require_version_compare(
-    fn: (Callable[['PythonSpecifier', BaseVersion, str], bool])
-) -> Callable[['PythonSpecifier', BaseVersion, str], bool]:
-    @functools.wraps(fn)
-    def wrapped(self: 'PythonSpecifier', prospective: BaseVersion,
-                spec: str) -> bool:
-        if not isinstance(prospective, PythonVersion):
-            return False
-        return fn(self, prospective, spec)
-
-    return wrapped
-
-
 class PythonSpecifier(IndividualSpecifier):
     _regex_str = r"""
         (?P<operator>(~=|==|!=|<=|>=|<|>|===))
@@ -437,7 +424,10 @@ class PythonSpecifier(IndividualSpecifier):
             version = PythonVersion(str(version))
         return version
 
-    @_require_version_compare
+    @property
+    def _canonical_spec(self) -> Tuple[str, str]:
+        return self._spec[0], _canonicalize_version(self._spec[1])
+
     def _compare_compatible(self, prospective: BaseVersion, spec: str) -> bool:
         # Compatible releases have an equivalent combination of >= and ==. That
         # is that ~=2.2 is equivalent to >=2.2,==2.*. This allows us to
@@ -462,7 +452,6 @@ class PythonSpecifier(IndividualSpecifier):
         return (self._get_operator(">=")(prospective, spec) and
                 self._get_operator("==")(prospective, prefix))
 
-    @_require_version_compare
     def _compare_equal(self, prospective: BaseVersion, spec: str) -> bool:
         # We need special logic to handle prefix matching
         if spec.endswith(".*"):
@@ -501,11 +490,9 @@ class PythonSpecifier(IndividualSpecifier):
 
             return prospective == spec_version
 
-    @_require_version_compare
     def _compare_not_equal(self, prospective: BaseVersion, spec: str) -> bool:
         return not self._compare_equal(prospective, spec)
 
-    @_require_version_compare
     def _compare_less_than_equal(self, prospective: BaseVersion,
                                  spec: str) -> bool:
         # NB: Local version identifiers are NOT permitted in the version
@@ -513,7 +500,6 @@ class PythonSpecifier(IndividualSpecifier):
         # the prospective version.
         return PythonVersion(prospective.public) <= PythonVersion(spec)
 
-    @_require_version_compare
     def _compare_greater_than_equal(self, prospective: BaseVersion,
                                     spec: str) -> bool:
         # NB: Local version identifiers are NOT permitted in the version
@@ -521,7 +507,6 @@ class PythonSpecifier(IndividualSpecifier):
         # the prospective version.
         return PythonVersion(prospective.public) >= PythonVersion(spec)
 
-    @_require_version_compare
     def _compare_less_than(self, prospective: BaseVersion,
                            spec_str: str) -> bool:
         # Convert our spec to a PythonVersion instance, since we'll want to
@@ -548,7 +533,6 @@ class PythonSpecifier(IndividualSpecifier):
         # version in the spec.
         return True
 
-    @_require_version_compare
     def _compare_greater_than(self, prospective: BaseVersion,
                               spec_str: str) -> bool:
         # Convert our spec to a PythonVersion instance, since we'll want to
@@ -613,6 +597,48 @@ class PythonSpecifier(IndividualSpecifier):
     @prereleases.setter
     def prereleases(self, value: bool) -> None:
         self._prereleases = value
+
+
+def _canonicalize_version(_version: str) -> str:
+    """
+    This is very similar to PythonVersion.__str__, but has one subtle
+    difference with the way it handles the release segment.
+    """
+
+    try:
+        version = PythonVersion(_version)
+    except InvalidVersion:
+        return _version
+
+    parts = []
+
+    # Epoch
+    if version.epoch != 0:
+        parts.append("{0}!".format(version.epoch))
+
+    # Release segment
+    # NB: This strips trailing '.0's to normalize
+    parts.append(re.sub(r"(\.0)+$", "", ".".join(
+        str(x) for x in version.release
+    )))
+
+    # Pre-release
+    if version.pre is not None:
+        parts.append("".join(str(x) for x in version.pre))
+
+    # Post-release
+    if version.post is not None:
+        parts.append(".post{0}".format(version.post))
+
+    # Development release
+    if version.dev is not None:
+        parts.append(".dev{0}".format(version.dev))
+
+    # Local version segment
+    if version.local is not None:
+        parts.append("+{0}".format(version.local))
+
+    return "".join(parts)
 
 
 _prefix_regex = re.compile(r"^([0-9]+)((?:a|b|c|rc)[0-9]+)$")

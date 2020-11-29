@@ -3,7 +3,6 @@ from typing import (Callable, Dict, Iterable, Iterator, Optional, Pattern, Set,
                     Tuple, Union)
 
 from .baseversion import BaseVersion, UnparsedVersion
-from .utils import canonicalize_version
 
 
 CallableOperator = Callable[[BaseVersion, str], bool]
@@ -97,6 +96,11 @@ class IndividualSpecifier(BaseSpecifier, metaclass=abc.ABCMeta):
     def _coerce_version(self, version: UnparsedVersion) -> BaseVersion:
         pass
 
+    @property
+    @abc.abstractmethod
+    def _canonical_spec(self) -> Tuple[str, UnparsedVersion]:
+        pass
+
     def __repr__(self) -> str:
         pre = (
             ", prereleases={0!r}".format(self.prereleases)
@@ -108,10 +112,6 @@ class IndividualSpecifier(BaseSpecifier, metaclass=abc.ABCMeta):
 
     def __str__(self) -> str:
         return "{0}{1}".format(*self._spec)
-
-    @property
-    def _canonical_spec(self) -> Tuple[str, UnparsedVersion]:
-        return self._spec[0], canonicalize_version(self._spec[1])
 
     def __hash__(self) -> int:
         return hash(self._canonical_spec)

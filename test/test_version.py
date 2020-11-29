@@ -4,7 +4,7 @@ import operator
 import pretend  # type: ignore
 import pytest
 
-from verspec.python import PythonVersion, InvalidVersion
+from verspec.python import PythonVersion, InvalidVersion, _canonicalize_version
 from verspec.loose import LooseVersion
 
 
@@ -67,6 +67,26 @@ VERSIONS = [
     "1!1.2.r32+123456",
     "1!1.2.rev33+123456",
 ]
+
+
+@pytest.mark.parametrize(
+    ("version", "expected"),
+    [
+        ("1.4.0", "1.4"),
+        ("1.40.0", "1.40"),
+        ("1.4.0.0.00.000.0000", "1.4"),
+        ("1.0", "1"),
+        ("1.0+abc", "1+abc"),
+        ("1.0.dev0", "1.dev0"),
+        ("1.0.post0", "1.post0"),
+        ("1.0a0", "1a0"),
+        ("1.0rc0", "1rc0"),
+        ("100!0.0", "100!0"),
+        ("1.0.1-test7", "1.0.1-test7"),  # LooseVersion is unchanged
+    ],
+)
+def test_canonicalize_version(version, expected):
+    assert _canonicalize_version(version) == expected
 
 
 class TestPythonVersion:

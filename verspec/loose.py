@@ -147,6 +147,10 @@ class LooseSpecifier(IndividualSpecifier):
             version = LooseVersion(str(version))
         return version
 
+    @property
+    def _canonical_spec(self) -> Tuple[str, str]:
+        return self._spec
+
     def _compare_equal(self, prospective: LooseVersion, spec: str) -> bool:
         return prospective == self._coerce_version(spec)
 
