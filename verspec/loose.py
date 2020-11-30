@@ -7,7 +7,7 @@ from .basespecifier import *
 __all__ = ["InvalidVersion", "InvalidSpecifier", "LooseSpecifier",
            "LooseSpecifierSet", "LooseVersion"]
 
-LooseCmpKey = Tuple[int, Tuple[str, ...]]
+LooseCmpKey = Tuple[str, ...]
 
 
 class LooseVersion(BaseVersion):
@@ -92,8 +92,6 @@ def _parse_version_parts(s: str) -> Iterator[str]:
 
 
 def _loose_cmpkey(version: str) -> LooseCmpKey:
-    epoch = 0
-
     # This scheme is taken from pkg_resources.parse_version setuptools prior to
     # it's adoption of the packaging library.
     parts: List[str] = []
@@ -110,7 +108,7 @@ def _loose_cmpkey(version: str) -> LooseCmpKey:
 
         parts.append(part)
 
-    return epoch, tuple(parts)
+    return tuple(parts)
 
 
 class LooseSpecifier(IndividualSpecifier):
