@@ -1,5 +1,6 @@
 # verspec
 
+[![PyPi version][pypi-image]][pypi-link]
 [![Github build status][gh-actions-image]][gh-actions-link]
 [![Coverage status][codecov-image]][codecov-link]
 
@@ -32,6 +33,8 @@ The real credit for this package goes to the [Python Packaging Authority][pypa].
 
 This project is dual-licensed under the BSD and Apache licenses.
 
+[pypi-image]: https://img.shields.io/pypi/v/verspec.svg
+[pypi-link]: https://pypi.python.org/pypi/verspec
 [gh-actions-image]: https://github.com/jimporter/verspec/workflows/build/badge.svg
 [gh-actions-link]: https://github.com/jimporter/verspec/actions?query=branch%3Amaster+workflow%3Abuild
 [codecov-image]: https://codecov.io/gh/jimporter/verspec/branch/master/graph/badge.svg
