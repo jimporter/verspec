@@ -28,7 +28,7 @@ class LooseVersion(BaseVersion):
 
     @property
     def epoch(self) -> int:
-        return -1
+        return 0
 
     @property
     def release(self) -> None:
@@ -92,11 +92,7 @@ def _parse_version_parts(s: str) -> Iterator[str]:
 
 
 def _loose_cmpkey(version: str) -> LooseCmpKey:
-    # We hardcode an epoch of -1 here. A PEP 440 version can only have a epoch
-    # greater than or equal to 0. This will effectively put the LooseVersion,
-    # which uses the defacto standard originally implemented by setuptools,
-    # as before all PEP 440 versions.
-    epoch = -1
+    epoch = 0
 
     # This scheme is taken from pkg_resources.parse_version setuptools prior to
     # it's adoption of the packaging library.

@@ -22,37 +22,37 @@ class BaseVersion(metaclass=abc.ABCMeta):
         return "<{}({})>".format(type(self).__name__, repr(str(self)))
 
     def __lt__(self, other: object) -> bool:
-        if not isinstance(other, BaseVersion):
+        if not isinstance(other, type(self)):
             return NotImplemented
 
         return self._key < other._key
 
     def __le__(self, other: object) -> bool:
-        if not isinstance(other, BaseVersion):
+        if not isinstance(other, type(self)):
             return NotImplemented
 
         return self._key <= other._key
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, BaseVersion):
+        if not isinstance(other, type(self)):
             return NotImplemented
 
         return self._key == other._key
 
     def __ge__(self, other: object) -> bool:
-        if not isinstance(other, BaseVersion):
+        if not isinstance(other, type(self)):
             return NotImplemented
 
         return self._key >= other._key
 
     def __gt__(self, other: object) -> bool:
-        if not isinstance(other, BaseVersion):
+        if not isinstance(other, type(self)):
             return NotImplemented
 
         return self._key > other._key
 
     def __ne__(self, other: object) -> bool:
-        if not isinstance(other, BaseVersion):
+        if not isinstance(other, type(self)):
             return NotImplemented
 
         return self._key != other._key

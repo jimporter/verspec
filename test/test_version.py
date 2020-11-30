@@ -741,9 +741,10 @@ class TestPythonVersion:
 
         assert getattr(operator, op)(PythonVersion("1"), other) is expected
 
-    def test_compare_looseversion_version(self):
-        result = sorted([PythonVersion("0"), LooseVersion("1")])
-        assert result == [LooseVersion("1"), PythonVersion("0")]
+    @pytest.mark.parametrize("op", ["lt", "le", "eq", "ge", "gt", "ne"])
+    def test_compare_with_looseversion(self, op):
+        method = getattr(PythonVersion, "__{0}__".format(op))
+        assert method(PythonVersion("0"), LooseVersion("1")) is NotImplemented
 
     def test_major_version(self):
         assert PythonVersion("2.1.0").major == 2
@@ -807,7 +808,7 @@ class TestLooseVersion:
 
     @pytest.mark.parametrize("version", VERSIONS + LOOSE_VERSIONS)
     def test_loose_version_epoch(self, version):
-        assert LooseVersion(version).epoch == -1
+        assert LooseVersion(version).epoch == 0
 
     @pytest.mark.parametrize("version", VERSIONS + LOOSE_VERSIONS)
     def test_loose_version_release(self, version):
@@ -938,3 +939,8 @@ class TestLooseVersion:
         })
 
         assert getattr(operator, op)(LooseVersion("1"), other) is expected
+
+    @pytest.mark.parametrize("op", ["lt", "le", "eq", "ge", "gt", "ne"])
+    def test_compare_with_pythonversion(self, op):
+        method = getattr(LooseVersion, "__{0}__".format(op))
+        assert method(LooseVersion("0"), PythonVersion("1")) is NotImplemented
