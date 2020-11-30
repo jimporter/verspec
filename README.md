@@ -6,6 +6,24 @@
 **verspec** is a Python library for handling software versions and specifiers,
 adapted from the [`packaging`][packaging] package.
 
+## An Example
+
+```python
+from verspec import loose, python
+
+v1 = loose.Version('1.0')
+s1 = loose.SpecifierSet('~=1.0')
+assert v1 in s1
+
+v2 = python.Version('1.0')
+s2 = python.SpecifierSet('~=1.0')
+assert v2 in s2
+```
+
+## Documentation
+
+Forthcoming! (Sorry about that...)
+
 ## Credits
 
 The real credit for this package goes to the [Python Packaging Authority][pypa].
