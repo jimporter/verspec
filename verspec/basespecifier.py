@@ -258,8 +258,8 @@ class BaseSpecifierSet(BaseSpecifier, metaclass=abc.ABCMeta):
         return hash(self._specs)
 
     def __and__(
-        self, other: Union['BaseSpecifierSet', str],
-    ) -> 'BaseSpecifierSet':
+        self, other: Union["BaseSpecifierSet", str],
+    ) -> "BaseSpecifierSet":
         if isinstance(other, str):
             other = type(self)(other)  # type: ignore
         elif not isinstance(other, type(self)):

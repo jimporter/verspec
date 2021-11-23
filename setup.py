@@ -112,7 +112,7 @@ setup(
     license="BSD 2-Clause or Apache-2.0",
 
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
 
         "Intended Audience :: Developers",
 
@@ -123,12 +123,13 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.0",
+        "Programming Language :: Python :: 3.9",
     ],
 
     packages=find_packages(exclude=["test", "test.*"]),
     extras_require={
-        'test': ['coverage', 'flake8 >= 3.7', 'mypy', 'pytest', 'pretend'],
+        "test": ["coverage", "flake8 >= 3.7", "flake8-quotes", "mypy",
+                 "pytest", "pretend"],
     },
 
     cmdclass={
