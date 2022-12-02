@@ -570,7 +570,7 @@ class PythonSpecifier(IndividualSpecifier):
         return str(prospective).lower() == str(spec).lower()
 
     @property
-    def prereleases(self) -> bool:
+    def prereleases(self) -> Optional[bool]:
         # If there is an explicit prereleases set for this, then we'll just
         # blindly use that.
         if self._prereleases is not None:
