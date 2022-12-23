@@ -109,7 +109,7 @@ setup(
 
     author="Jim Porter",
     author_email="itsjimporter@gmail.com",
-    license="BSD 2-Clause or Apache-2.0",
+    license="BSD-2-Clause OR Apache-2.0",
 
     classifiers=[
         "Development Status :: 5 - Production/Stable",
