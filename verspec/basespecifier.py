@@ -76,10 +76,11 @@ class BaseSpecifier(metaclass=abc.ABCMeta):
 
 class IndividualSpecifier(BaseSpecifier, metaclass=abc.ABCMeta):
     _operators: Dict[str, str] = {}
-    _regex = None  # type: Pattern
+    _regex: Optional[Pattern] = None
 
     def __init__(self, spec: str = "",
                  prereleases: Optional[bool] = None) -> None:
+        assert self._regex is not None
         match = self._regex.search(spec)
         if not match:
             raise InvalidSpecifier("Invalid specifier: '{0}'".format(spec))
