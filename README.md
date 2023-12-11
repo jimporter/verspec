@@ -1,7 +1,7 @@
 # verspec
 
 [![PyPi version][pypi-image]][pypi-link]
-[![Github build status][ci-image]][ci-link]
+[![Build status][ci-image]][ci-link]
 [![Coverage status][codecov-image]][codecov-link]
 
 **verspec** is a Python library for handling software versions and specifiers,
