@@ -13,7 +13,7 @@ class InvalidVersion(ValueError):
 
 
 class BaseVersion(metaclass=abc.ABCMeta):
-    _key = None  # type: CmpKey
+    _key: CmpKey
 
     def __hash__(self) -> int:
         return hash(self._key)
