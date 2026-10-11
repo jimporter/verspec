@@ -1,4 +1,3 @@
-import itertools
 import operator
 
 import pretend  # type: ignore
@@ -676,25 +675,24 @@ class TestPythonVersion:
         ("left", "right", "op"),
         # Below we'll generate every possible combination of VERSIONS that
         # should be True for the given operator
-        itertools.chain(
-            *
+        (
             # Verify that the less than (<) operator works correctly
-            [[(x, y, operator.lt) for y in VERSIONS[i + 1:]]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.lt) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[i + 1:]] +
             # Verify that the less than equal (<=) operator works correctly
-            [[(x, y, operator.le) for y in VERSIONS[i:]]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.le) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[i:]] +
             # Verify that the equal (==) operator works correctly
-            [[(x, x, operator.eq) for x in VERSIONS]] +
+            [(x, x, operator.eq) for x in VERSIONS] +
             # Verify that the not equal (!=) operator works correctly
-            [[(x, y, operator.ne) for j, y in enumerate(VERSIONS) if i != j]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.ne) for i, x in enumerate(VERSIONS)
+             for j, y in enumerate(VERSIONS) if i != j] +
             # Verify that the greater than equal (>=) operator works correctly
-            [[(x, y, operator.ge) for y in VERSIONS[:i + 1]]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.ge) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[:i + 1]] +
             # Verify that the greater than (>) operator works correctly
-            [[(x, y, operator.gt) for y in VERSIONS[:i]]
-             for i, x in enumerate(VERSIONS)]
+            [(x, y, operator.gt) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[:i]]
         ),
     )
     def test_comparison_true(self, left, right, op):
@@ -704,25 +702,24 @@ class TestPythonVersion:
         ("left", "right", "op"),
         # Below we'll generate every possible combination of VERSIONS that
         # should be False for the given operator
-        itertools.chain(
-            *
+        (
             # Verify that the less than (<) operator works correctly
-            [[(x, y, operator.lt) for y in VERSIONS[:i + 1]]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.lt) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[:i + 1]] +
             # Verify that the less than equal (<=) operator works correctly
-            [[(x, y, operator.le) for y in VERSIONS[:i]]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.le) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[:i]] +
             # Verify that the equal (==) operator works correctly
-            [[(x, y, operator.eq) for j, y in enumerate(VERSIONS) if i != j]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.eq) for i, x in enumerate(VERSIONS)
+             for j, y in enumerate(VERSIONS) if i != j] +
             # Verify that the not equal (!=) operator works correctly
-            [[(x, x, operator.ne) for x in VERSIONS]] +
+            [(x, x, operator.ne) for x in VERSIONS] +
             # Verify that the greater than equal (>=) operator works correctly
-            [[(x, y, operator.ge) for y in VERSIONS[i + 1:]]
-             for i, x in enumerate(VERSIONS)] +
+            [(x, y, operator.ge) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[i + 1:]] +
             # Verify that the greater than (>) operator works correctly
-            [[(x, y, operator.gt) for y in VERSIONS[i:]]
-             for i, x in enumerate(VERSIONS)]
+            [(x, y, operator.gt) for i, x in enumerate(VERSIONS)
+             for y in VERSIONS[i:]]
         ),
     )
     def test_comparison_false(self, left, right, op):
@@ -846,16 +843,13 @@ class TestLooseVersion:
         ("left", "right", "op"),
         # Below we'll generate every possible combination of
         # VERSIONS + LOOSE_VERSIONS that should be True for the given operator
-        itertools.chain(
-            *
+        (
             # Verify that the equal (==) operator works correctly
-            [[(x, x, operator.eq) for x in VERSIONS + LOOSE_VERSIONS]] +
+            [(x, x, operator.eq) for x in VERSIONS + LOOSE_VERSIONS] +
             # Verify that the not equal (!=) operator works correctly
-            [
-                [(x, y, operator.ne) for j, y in
-                 enumerate(VERSIONS + LOOSE_VERSIONS) if i != j]
-                for i, x in enumerate(VERSIONS + LOOSE_VERSIONS)
-            ]
+            [(x, y, operator.ne)
+             for i, x in enumerate(VERSIONS + LOOSE_VERSIONS)
+             for j, y in enumerate(VERSIONS + LOOSE_VERSIONS) if i != j]
         ),
     )
     def test_equality_true(self, left, right, op):
@@ -866,16 +860,13 @@ class TestLooseVersion:
         # Below we'll generate every possible combination of
         # VERSIONS + LOOSE_VERSIONS that should be False for the given
         # operator
-        itertools.chain(
-            *
+        (
             # Verify that the equal (==) operator works correctly
-            [
-                [(x, y, operator.eq) for j, y in
-                 enumerate(VERSIONS + LOOSE_VERSIONS) if i != j ]
-                for i, x in enumerate(VERSIONS + LOOSE_VERSIONS)
-            ] +
+            [(x, y, operator.eq)
+             for i, x in enumerate(VERSIONS + LOOSE_VERSIONS)
+             for j, y in enumerate(VERSIONS + LOOSE_VERSIONS) if i != j] +
             # Verify that the not equal (!=) operator works correctly
-            [[(x, x, operator.ne) for x in VERSIONS + LOOSE_VERSIONS]]
+            [(x, x, operator.ne) for x in VERSIONS + LOOSE_VERSIONS]
         ),
     )
     def test_equality_false(self, left, right, op):
@@ -885,20 +876,19 @@ class TestLooseVersion:
         ("left", "right", "op"),
         # Below we'll generate every possible combination of VERSIONS that
         # should be True for the given operator
-        itertools.chain(
-            *
+        (
             # Verify that the less than (<) operator works correctly
-            [[(x, y, operator.lt) for y in LOOSE_CMP_VERSIONS[i + 1:]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)] +
+            [(x, y, operator.lt) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[i + 1:]] +
             # Verify that the less than equal (<=) operator works correctly
-            [[(x, y, operator.le) for y in LOOSE_CMP_VERSIONS[i:]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)] +
+            [(x, y, operator.le) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[i:]] +
             # Verify that the greater than equal (>=) operator works correctly
-            [[(x, y, operator.ge) for y in LOOSE_CMP_VERSIONS[:i + 1]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)] +
+            [(x, y, operator.ge) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[:i + 1]] +
             # Verify that the greater than (>) operator works correctly
-            [[(x, y, operator.gt) for y in LOOSE_CMP_VERSIONS[:i]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)]
+            [(x, y, operator.gt) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[:i]]
         ),
     )
     def test_comparison_true(self, left, right, op):
@@ -908,20 +898,19 @@ class TestLooseVersion:
         ("left", "right", "op"),
         # Below we'll generate every possible combination of VERSIONS that
         # should be False for the given operator
-        itertools.chain(
-            *
+        (
             # Verify that the less than (<) operator works correctly
-            [[(x, y, operator.lt) for y in LOOSE_CMP_VERSIONS[:i + 1]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)] +
+            [(x, y, operator.lt) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[:i + 1]] +
             # Verify that the less than equal (<=) operator works correctly
-            [[(x, y, operator.le) for y in LOOSE_CMP_VERSIONS[:i]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)] +
+            [(x, y, operator.le) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[:i]] +
             # Verify that the greater than equal (>=) operator works correctly
-            [[(x, y, operator.ge) for y in LOOSE_CMP_VERSIONS[i + 1:]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)] +
+            [(x, y, operator.ge) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[i + 1:]] +
             # Verify that the greater than (>) operator works correctly
-            [[(x, y, operator.gt) for y in LOOSE_CMP_VERSIONS[i:]]
-             for i, x in enumerate(LOOSE_CMP_VERSIONS)]
+            [(x, y, operator.gt) for i, x in enumerate(LOOSE_CMP_VERSIONS)
+             for y in LOOSE_CMP_VERSIONS[i:]]
         ),
     )
     def test_comparison_false(self, left, right, op):
