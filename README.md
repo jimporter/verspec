@@ -10,20 +10,18 @@ adapted from the [`packaging`][packaging] package.
 ## An Example
 
 ```python
-from verspec import loose, python
+>>> from verspec import python
+>>> v1 = python.Version('1.0')
+>>> s1 = python.SpecifierSet('~=1.0')
+>>> v1 in s1
+True
 
-v1 = loose.Version('1.0')
-s1 = loose.SpecifierSet('~=1.0')
-assert v1 in s1
-
-v2 = python.Version('1.0')
-s2 = python.SpecifierSet('~=1.0')
-assert v2 in s2
+>>> from verspec import loose
+>>> v2 = loose.Version('1.0')
+>>> s2 = loose.SpecifierSet('>=1.0')
+>>> v2 in s2
+True
 ```
-
-## Documentation
-
-Forthcoming! (Sorry about that...)
 
 ## Credits
 

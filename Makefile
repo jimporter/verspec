@@ -17,8 +17,20 @@ lint:
 typecheck:
 	mypy verspec test
 
+.PHONY: doctest
+doctest:
+	sphinx-build -b doctest doc $(BUILDDIR)/doctest
+
 .PHONY: static-check
 static-check: lint typecheck
+
+.PHONY: doc-html
+doc-html:
+	sphinx-build -b html doc $(BUILDDIR)/html
+
+.PHONY: doc-deploy
+doc-deploy: doc-html
+	ghp-import --no-jekyll $(BUILDDIR)/html
 
 .PHONY: clean
 clean:
