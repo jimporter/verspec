@@ -5,11 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>verspec Documentation &#8212; verspec 0.2.0.dev0 documentation</title>
+    <title>inversion Documentation &#8212; inversion 1.0.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
     <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
     <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
-    <script src="_static/documentation_options.js?v=130a53a1"></script>
+    <script src="_static/documentation_options.js?v=8d563738"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -32,26 +32,26 @@
 
           <div class="body" role="main">
             
-  <section id="verspec-documentation">
-<h1>verspec Documentation<a class="headerlink" href="#verspec-documentation" title="Link to this heading">¶</a></h1>
-<p><strong>verspec</strong> is a Python library for handling software versions and specifiers,
+  <section id="inversion-documentation">
+<h1>inversion Documentation<a class="headerlink" href="#inversion-documentation" title="Link to this heading">¶</a></h1>
+<p><strong>inversion</strong> is a Python library for handling software versions and specifiers,
 adapted from the <a class="reference external" href="https://github.com/pypa/packaging">packaging</a> package.</p>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h2>
-<p>You can install verspec with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>verspec
+<p>You can install inversion with <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pip<span class="w"> </span>install<span class="w"> </span>inversion
 </pre></div>
 </div>
 </section>
 <section id="an-example">
 <h2>An Example<a class="headerlink" href="#an-example" title="Link to this heading">¶</a></h2>
-<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">verspec</span><span class="w"> </span><span class="kn">import</span> <span class="n">python</span>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">python</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="o">=</span> <span class="n">python</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="s1">'1.0'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s1</span> <span class="o">=</span> <span class="n">python</span><span class="o">.</span><span class="n">SpecifierSet</span><span class="p">(</span><span class="s1">'~=1.0'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="ow">in</span> <span class="n">s1</span>
 <span class="go">True</span>
 
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">verspec</span><span class="w"> </span><span class="kn">import</span> <span class="n">loose</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">inversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">loose</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">v2</span> <span class="o">=</span> <span class="n">loose</span><span class="o">.</span><span class="n">Version</span><span class="p">(</span><span class="s1">'1.0'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span> <span class="o">=</span> <span class="n">loose</span><span class="o">.</span><span class="n">SpecifierSet</span><span class="p">(</span><span class="s1">'&gt;=1.0'</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">v2</span> <span class="ow">in</span> <span class="n">s2</span>
@@ -98,7 +98,7 @@ adapted from the <a class="reference external" href="https://github.com/pypa/pac
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="#">verspec</a></h1>
+<h1 class="logo"><a href="#">inversion</a></h1>
 
 
 

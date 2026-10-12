@@ -10,7 +10,7 @@ Usage
 
 .. doctest::
 
-    >>> from verspec.python import PythonVersion
+    >>> from inversion.python import PythonVersion
     >>> v1 = PythonVersion("1.0a5")
     >>> v2 = PythonVersion("1.0")
     >>> v1
@@ -48,7 +48,7 @@ Reference
 Python Versions
 ^^^^^^^^^^^^^^^
 
-.. currentmodule:: verspec.python
+.. currentmodule:: inversion.python
 
 .. class:: PythonVersion(version)
 
@@ -163,7 +163,7 @@ Python Versions
 Loose Versions
 ^^^^^^^^^^^^^^
 
-.. currentmodule:: verspec.loose
+.. currentmodule:: inversion.loose
 
 .. class:: LooseVersion(version)
 
@@ -180,8 +180,8 @@ Loose Versions
         :class:`LooseVersion` instances can't be compared with
         :class:`~.PythonVersion` instances:
 
-        >>> from verspec.python import PythonVersion
-        >>> from verspec.loose import LooseVersion
+        >>> from inversion.python import PythonVersion
+        >>> from inversion.loose import LooseVersion
         >>> v1 = PythonVersion("1.0")
         >>> v2 = LooseVersion("1.0")
         >>> v1 == v2
