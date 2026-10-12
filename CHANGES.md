@@ -1,6 +1,6 @@
 # Changes
 
-## v1.0.0 (in progress)
+## v1.0.0 (2026-10-12)
 
 - Rename project to `inversion` (a much better name, I'm sure you'll agree)
 - Add documentation
