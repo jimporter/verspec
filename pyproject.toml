@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "verspec"
+authors = [{name = "Jim Porter", email = "itsjimporter@gmail.com"}]
+description = "Flexible version handling"
+dynamic = ["license", "readme", "version"]
+
+requires-python = ">=3.7"
+keywords = ["versioning"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+
+[project.optional-dependencies]
+test = ["coverage", "flake8 >= 3.7", "flake8-quotes", "mypy",
+        "pytest", "pretend"]
+
+[tool.setuptools.dynamic]
+version = {attr = "verspec.__version__"}
+
+[tool.setuptools.packages.find]
+exclude = ["test", "test.*"]
+
+[tool.coverage.run]
+source = ["verspec"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "@abc.abstractmethod",
+]
