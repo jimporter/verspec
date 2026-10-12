@@ -95,8 +95,8 @@ Python Specifiers
         :class:`PythonVersion`, is contained within this set of specifiers.
 
         This will either match or not match prereleases based on the
-        ``prereleases`` parameter. When ``prereleases`` is set to ``None``
-        (the default) it will use the ``PythonSpecifier().prereleases`` attribute to
+        ``prereleases`` parameter. When ``prereleases`` is set to ``None`` (the
+        default) it will use the ``PythonSpecifier().prereleases`` attribute to
         determine if to allow them. Otherwise it will use the boolean value of
         the passed in value to determine if to allow them or not.
 
