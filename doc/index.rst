@@ -1,5 +1,5 @@
 inversion Documentation
-=====================
+=======================
 
 **inversion** is a Python library for handling software versions and specifiers,
 adapted from the `packaging`_ package.
