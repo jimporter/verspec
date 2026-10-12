@@ -4,8 +4,8 @@ from typing import Iterator, List, Tuple
 from .baseversion import *
 from .basespecifier import *
 
-__all__ = ["InvalidVersion", "InvalidSpecifier", "LooseSpecifier",
-           "LooseSpecifierSet", "LooseVersion"]
+__all__ = ["InvalidSpecifier", "LooseSpecifier", "LooseSpecifierSet",
+           "LooseVersion"]
 
 LooseCmpKey = Tuple[str, ...]
 
