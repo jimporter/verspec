@@ -1,17 +1,17 @@
-verspec Documentation
+inversion Documentation
 =====================
 
-**verspec** is a Python library for handling software versions and specifiers,
+**inversion** is a Python library for handling software versions and specifiers,
 adapted from the `packaging`_ package.
 
 Installation
 ------------
 
-You can install verspec with ``pip``:
+You can install inversion with ``pip``:
 
 .. code-block:: console
 
-    $ pip install verspec
+    $ pip install inversion
 
 
 An Example
@@ -19,13 +19,13 @@ An Example
 
 .. doctest::
 
-   >>> from verspec import python
+   >>> from inversion import python
    >>> v1 = python.Version('1.0')
    >>> s1 = python.SpecifierSet('~=1.0')
    >>> v1 in s1
    True
 
-   >>> from verspec import loose
+   >>> from inversion import loose
    >>> v2 = loose.Version('1.0')
    >>> s2 = loose.SpecifierSet('>=1.0')
    >>> v2 in s2

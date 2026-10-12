@@ -3,8 +3,9 @@ import operator
 import pretend  # type: ignore
 import pytest
 
-from verspec.python import PythonVersion, InvalidVersion, _canonicalize_version
-from verspec.loose import LooseVersion
+from inversion.python import (PythonVersion, InvalidVersion,
+                              _canonicalize_version)
+from inversion.loose import LooseVersion
 
 
 # This list must be in the correct sorting order

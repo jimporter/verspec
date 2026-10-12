@@ -15,7 +15,7 @@ lint:
 
 .PHONY: typecheck
 typecheck:
-	mypy verspec test
+	mypy inversion test
 
 .PHONY: doctest
 doctest:

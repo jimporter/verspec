@@ -2,9 +2,9 @@ import operator
 
 import pytest
 
-from verspec.basespecifier import InvalidSpecifier
-from verspec.python import PythonVersion, PythonSpecifier, PythonSpecifierSet
-from verspec.loose import LooseVersion, LooseSpecifier, LooseSpecifierSet
+from inversion.basespecifier import InvalidSpecifier
+from inversion.python import PythonVersion, PythonSpecifier, PythonSpecifierSet
+from inversion.loose import LooseVersion, LooseSpecifier, LooseSpecifierSet
 
 from .test_version import VERSIONS, LOOSE_VERSIONS
 

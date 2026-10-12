@@ -2,6 +2,7 @@
 
 ## v1.0.0 (in progress)
 
+- Rename project to `inversion` (a much better name, I'm sure you'll agree)
 - Add documentation
 
 ---

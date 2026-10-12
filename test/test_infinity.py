@@ -1,6 +1,6 @@
 import pytest
 
-from verspec.infinity import Infinity, NegativeInfinity
+from inversion.infinity import Infinity, NegativeInfinity
 
 
 def test_infinity_repr():

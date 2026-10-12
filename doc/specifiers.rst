@@ -10,7 +10,7 @@ Usage
 
 .. doctest::
 
-    >>> from verspec.python import PythonVersion, PythonSpecifierSet
+    >>> from inversion.python import PythonVersion, PythonSpecifierSet
     >>> spec1 = PythonSpecifierSet("~=1.0")
     >>> spec1
     <PythonSpecifierSet('~=1.0')>
@@ -48,7 +48,7 @@ Reference
 Python Specifiers
 ^^^^^^^^^^^^^^^^^
 
-.. currentmodule:: verspec.python
+.. currentmodule:: inversion.python
 
 .. class:: PythonSpecifierSet(specifiers, prereleases=None)
 
@@ -182,7 +182,7 @@ Python Specifiers
 Loose Specifiers
 ^^^^^^^^^^^^^^^^
 
-.. currentmodule:: verspec.loose
+.. currentmodule:: inversion.loose
 
 .. class:: LooseSpecifierSet(specifiers)
 
@@ -300,7 +300,7 @@ Loose Specifiers
 Exceptions
 ^^^^^^^^^^
 
-.. currentmodule:: verspec.basespecifier
+.. currentmodule:: inversion.basespecifier
 
 .. exception:: InvalidSpecifier
 

@@ -7,7 +7,7 @@ root_dir = os.path.abspath(os.path.dirname(__file__))
 
 with open(os.path.join(root_dir, "README.md"), "r") as f:
     # Read from the file and strip out the badges.
-    long_desc = re.sub(r"(^# verspec)\n\n(.+\n)*", r"\1", f.read())
+    long_desc = re.sub(r"(^# inversion)\n\n(.+\n)*", r"\1", f.read())
 
 setup(long_description=long_desc,
       long_description_content_type="text/markdown",
