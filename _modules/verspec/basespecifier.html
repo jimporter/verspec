@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>verspec.basespecifier &#8212; Project name not set  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for verspec.basespecifier</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">abc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Pattern</span><span class="p">,</span> <span class="n">Set</span><span class="p">,</span>
+                    <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.baseversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseVersion</span><span class="p">,</span> <span class="n">UnparsedVersion</span>
+
+
+<span class="n">CallableOperator</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">BaseVersion</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="nb">bool</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="InvalidSpecifier">
+<a class="viewcode-back" href="../../specifiers.html#verspec.python.InvalidSpecifier">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">InvalidSpecifier</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""</span>
+<span class="sd">    An invalid specifier was found, users should refer to PEP 440.</span>
+<span class="sd">    """</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseSpecifier</span><span class="p">(</span><span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Returns the str representation of this Specifier like object. This</span>
+<span class="sd">        should be representative of the Specifier itself.</span>
+<span class="sd">        """</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Returns a hash value for this Specifier like object.</span>
+<span class="sd">        """</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Returns a boolean representing whether or not the two Specifier like</span>
+<span class="sd">        objects are equal.</span>
+<span class="sd">        """</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Returns a boolean representing whether or not the two Specifier like</span>
+<span class="sd">        objects are not equal.</span>
+<span class="sd">        """</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractproperty</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prereleases</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Returns whether or not pre-releases as a whole are allowed by this</span>
+<span class="sd">        specifier.</span>
+<span class="sd">        """</span>
+
+    <span class="nd">@prereleases</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prereleases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Sets whether or not pre-releases as a whole are allowed by this</span>
+<span class="sd">        specifier.</span>
+<span class="sd">        """</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">,</span>
+                 <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Determines if the given item is contained within this specifier.</span>
+<span class="sd">        """</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">],</span>
+        <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Takes an iterable of items and filters them so that only items which</span>
+<span class="sd">        are contained within this specifier are allowed in it.</span>
+<span class="sd">        """</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">IndividualSpecifier</span><span class="p">(</span><span class="n">BaseSpecifier</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="n">_operators</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">_regex</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Pattern</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
+                 <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regex</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regex</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">InvalidSpecifier</span><span class="p">(</span><span class="s2">"Invalid specifier: '</span><span class="si">{0}</span><span class="s2">'"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">spec</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_spec</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"operator"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+            <span class="k">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="s2">"version"</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Store whether or not this Specifier should accept prereleases</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">=</span> <span class="n">prereleases</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_coerce_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseVersion</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@property</span>
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_canonical_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">UnparsedVersion</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">pre</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">", prereleases=</span><span class="si">{0!r}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prereleases</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="s2">""</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">"&lt;</span><span class="si">{0}</span><span class="s2">(</span><span class="si">{1!r}{2}</span><span class="s2">)&gt;"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">pre</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">"</span><span class="si">{0}{1}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_spec</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_canonical_spec</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">other</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">InvalidSpecifier</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canonical_spec</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_canonical_spec</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">other</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>
+            <span class="k">except</span> <span class="n">InvalidSpecifier</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">NotImplemented</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_canonical_spec</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">_canonical_spec</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_operator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CallableOperator</span><span class="p">:</span>
+        <span class="n">operator_callable</span><span class="p">:</span> <span class="n">CallableOperator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="s2">"_compare_</span><span class="si">{0}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_operators</span><span class="p">[</span><span class="n">op</span><span class="p">])</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">operator_callable</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">operator</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prereleases</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span>
+
+    <span class="nd">@prereleases</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prereleases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">,</span>
+                 <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+
+        <span class="c1"># Determine if prereleases are to be allowed or not.</span>
+        <span class="k">if</span> <span class="n">prereleases</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prereleases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prereleases</span>
+
+        <span class="c1"># Normalize item to a Version or LooseVersion, this allows us to have</span>
+        <span class="c1"># a shortcut for ``"2.0" in Specifier("&gt;=2")</span>
+        <span class="n">normalized_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+        <span class="c1"># Determine if we should be supporting prereleases in this specifier</span>
+        <span class="c1"># or not, if we do not support prereleases than we can short circuit</span>
+        <span class="c1"># logic if this version is a prereleases.</span>
+        <span class="k">if</span> <span class="n">normalized_item</span><span class="o">.</span><span class="n">is_prerelease</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prereleases</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># Actually do the comparison to determine if this item is contained</span>
+        <span class="c1"># within this Specifier or not.</span>
+        <span class="n">operator_callable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_operator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">operator</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">operator_callable</span><span class="p">(</span><span class="n">normalized_item</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">],</span>
+        <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">]:</span>
+        <span class="n">yielded</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">found_prereleases</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">kw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"prereleases"</span><span class="p">:</span> <span class="n">prereleases</span> <span class="k">if</span> <span class="n">prereleases</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="kc">True</span><span class="p">}</span>
+
+        <span class="c1"># Attempt to iterate over all the values in the iterable and if any of</span>
+        <span class="c1"># them match, yield them.</span>
+        <span class="k">for</span> <span class="n">version</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+            <span class="n">parsed_version</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">parsed_version</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+                <span class="c1"># If our version is a prerelease, and we were not set to allow</span>
+                <span class="c1"># prereleases, then we'll store it for later incase nothing</span>
+                <span class="c1"># else matches this specifier.</span>
+                <span class="k">if</span> <span class="n">parsed_version</span><span class="o">.</span><span class="n">is_prerelease</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span>
+                    <span class="n">prereleases</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">prereleases</span>
+                <span class="p">):</span>
+                    <span class="n">found_prereleases</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+                <span class="c1"># Either this is not a prerelease, or we should have been</span>
+                <span class="c1"># accepting prereleases from the beginning.</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">yielded</span> <span class="o">=</span> <span class="kc">True</span>
+                    <span class="k">yield</span> <span class="n">version</span>
+
+        <span class="c1"># Now that we've iterated over everything, determine if we've yielded</span>
+        <span class="c1"># any values, and if we have not and we have any prereleases stored up</span>
+        <span class="c1"># then we will go ahead and yield the prereleases.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">yielded</span> <span class="ow">and</span> <span class="n">found_prereleases</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">version</span> <span class="ow">in</span> <span class="n">found_prereleases</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">version</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">BaseSpecifierSet</span><span class="p">(</span><span class="n">BaseSpecifier</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">abc</span><span class="o">.</span><span class="n">ABCMeta</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parsed_specifiers</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">BaseSpecifier</span><span class="p">],</span>
+                 <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Turn our parsed specifiers into a frozen set and save them for later.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">parsed_specifiers</span><span class="p">)</span>
+
+        <span class="c1"># Store our prereleases value so we can use it later to determine if</span>
+        <span class="c1"># we accept prereleases or not.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">=</span> <span class="n">prereleases</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_coerce_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BaseVersion</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+    <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_filter_prereleases</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">],</span>
+        <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">]:</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">pre</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">", prereleases=</span><span class="si">{0!r}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">prereleases</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="s2">""</span>
+        <span class="p">)</span>
+
+        <span class="k">return</span> <span class="s2">"&lt;</span><span class="si">{0}</span><span class="s2">(</span><span class="si">{1!r}{2}</span><span class="s2">)&gt;"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">pre</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">","</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__and__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">"BaseSpecifierSet"</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"BaseSpecifierSet"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">other</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)):</span>
+            <span class="c1"># Currently, SpecifierSets and LooseSpecifierSets can't be</span>
+            <span class="c1"># combined.</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="n">specifier</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)()</span>  <span class="c1"># type: ignore</span>
+        <span class="n">specifier</span><span class="o">.</span><span class="n">_specs</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_specs</span> <span class="o">|</span> <span class="n">other</span><span class="o">.</span><span class="n">_specs</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_prereleases</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">specifier</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">_prereleases</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_prereleases</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">specifier</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_prereleases</span><span class="p">:</span>
+            <span class="n">specifier</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"Cannot combine </span><span class="si">{}</span><span class="s2">s with True and False prerelease "</span>
+                <span class="s2">"overrides."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+            <span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">specifier</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">IndividualSpecifier</span><span class="p">)):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseSpecifierSet</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_specs</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">IndividualSpecifier</span><span class="p">)):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">))</span>  <span class="c1"># type: ignore</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseSpecifierSet</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="n">_specs</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">BaseSpecifier</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prereleases</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]:</span>
+        <span class="c1"># If we have been given an explicit prerelease modifier, then we'll</span>
+        <span class="c1"># pass that through here.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span>
+
+        <span class="c1"># If we don't have any specifiers, and we don't have a forced value,</span>
+        <span class="c1"># then we'll just return None since we don't know if this should have</span>
+        <span class="c1"># pre-releases or not.</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Otherwise we'll see if any of the given specifiers accept</span>
+        <span class="c1"># prereleases, if any of them do we'll return True, otherwise False.</span>
+        <span class="k">return</span> <span class="nb">any</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">prereleases</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">)</span>
+
+    <span class="nd">@prereleases</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">prereleases</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_prereleases</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__contains__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">contains</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">,</span>
+                 <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="c1"># Ensure that our item is a PythonVersion or LooseVersion instance.</span>
+        <span class="n">parsed_item</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+
+        <span class="c1"># Determine if we're forcing a prerelease or not, if we're not forcing</span>
+        <span class="c1"># one for this particular filter call, then we'll use whatever the</span>
+        <span class="c1"># SpecifierSet thinks for whether or not we should support prereleases.</span>
+        <span class="k">if</span> <span class="n">prereleases</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prereleases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prereleases</span>
+
+        <span class="c1"># We can determine if we're going to allow pre-releases by looking to</span>
+        <span class="c1"># see if any of the underlying items supports them. If none of them do</span>
+        <span class="c1"># and this item is a pre-release then we do not allow it and we can</span>
+        <span class="c1"># short circuit that here.</span>
+        <span class="c1"># Note: This means that 1.0.dev1 would not be contained in something</span>
+        <span class="c1">#       like &gt;=1.0.devabc however it would be in &gt;=1.0.debabc,&gt;0.0.dev0</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prereleases</span> <span class="ow">and</span> <span class="n">parsed_item</span><span class="o">.</span><span class="n">is_prerelease</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+        <span class="c1"># We simply dispatch to the underlying specs here to make sure that the</span>
+        <span class="c1"># given version is contained within all of them.</span>
+        <span class="c1"># Note: This use of all() here means that an empty set of specifiers</span>
+        <span class="c1">#       will always return True, this is an explicit design decision.</span>
+        <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+            <span class="n">s</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">parsed_item</span><span class="p">,</span> <span class="n">prereleases</span><span class="o">=</span><span class="n">prereleases</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">filter</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">],</span>
+        <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">]:</span>
+        <span class="c1"># Determine if we're forcing a prerelease or not, if we're not forcing</span>
+        <span class="c1"># one for this particular filter call, then we'll use whatever the</span>
+        <span class="c1"># SpecifierSet thinks for whether or not we should support prereleases.</span>
+        <span class="k">if</span> <span class="n">prereleases</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prereleases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prereleases</span>
+
+        <span class="c1"># If we have any specifiers, then we want to wrap our iterable in the</span>
+        <span class="c1"># filter method for each one, this will act as a logical AND amongst</span>
+        <span class="c1"># each specifier.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">spec</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_specs</span><span class="p">:</span>
+                <span class="n">iterable</span> <span class="o">=</span> <span class="n">spec</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">prereleases</span><span class="o">=</span><span class="nb">bool</span><span class="p">(</span><span class="n">prereleases</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">iterable</span>
+        <span class="c1"># If we do not have any specifiers, then we need to have a rough filter</span>
+        <span class="c1"># which will filter out any pre-releases, unless there are no final</span>
+        <span class="c1"># releases, and which will filter out LooseVersion in general.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_prereleases</span><span class="p">(</span><span class="n">iterable</span><span class="p">,</span> <span class="n">prereleases</span><span class="p">)</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Project name not set</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../version.html">Version Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../specifiers.html">Specifiers</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

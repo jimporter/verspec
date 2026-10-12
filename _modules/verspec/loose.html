@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="../../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>verspec.loose &#8212; verspec 0.2.0.dev0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/alabaster.css?v=27fed22d" />
+    <script src="../../_static/documentation_options.js?v=130a53a1"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for verspec.loose</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.baseversion</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.basespecifier</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"InvalidSpecifier"</span><span class="p">,</span> <span class="s2">"LooseSpecifier"</span><span class="p">,</span> <span class="s2">"LooseSpecifierSet"</span><span class="p">,</span>
+           <span class="s2">"LooseVersion"</span><span class="p">]</span>
+
+<span class="n">LooseCmpKey</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="LooseVersion">
+<a class="viewcode-back" href="../../version.html#verspec.loose.LooseVersion">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LooseVersion</span><span class="p">(</span><span class="n">BaseVersion</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_version</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">version</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_key</span> <span class="o">=</span> <span class="n">_loose_cmpkey</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_version</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">public</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">base_version</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_version</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">release</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pre</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dev</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">local</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_prerelease</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_postrelease</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_devrelease</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<span class="n">_loose_version_component_re</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"(\d+ | [a-z]+ | \.| -)"</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span><span class="p">)</span>
+
+<span class="n">_loose_version_replacement_map</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"pre"</span><span class="p">:</span> <span class="s2">"c"</span><span class="p">,</span>
+    <span class="s2">"preview"</span><span class="p">:</span> <span class="s2">"c"</span><span class="p">,</span>
+    <span class="s2">"-"</span><span class="p">:</span> <span class="s2">"final-"</span><span class="p">,</span>
+    <span class="s2">"rc"</span><span class="p">:</span> <span class="s2">"c"</span><span class="p">,</span>
+    <span class="s2">"dev"</span><span class="p">:</span> <span class="s2">"@"</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_parse_version_parts</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">_loose_version_component_re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+        <span class="n">part</span> <span class="o">=</span> <span class="n">_loose_version_replacement_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">part</span> <span class="ow">or</span> <span class="n">part</span> <span class="o">==</span> <span class="s2">"."</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="k">if</span> <span class="n">part</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">"0123456789"</span><span class="p">:</span>
+            <span class="c1"># pad for numeric comparison</span>
+            <span class="k">yield</span> <span class="n">part</span><span class="o">.</span><span class="n">zfill</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="s2">"*"</span> <span class="o">+</span> <span class="n">part</span>
+
+    <span class="c1"># ensure that alpha/beta/candidate are before final</span>
+    <span class="k">yield</span> <span class="s2">"*final"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_loose_cmpkey</span><span class="p">(</span><span class="n">version</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LooseCmpKey</span><span class="p">:</span>
+    <span class="c1"># This scheme is taken from pkg_resources.parse_version setuptools prior to</span>
+    <span class="c1"># it's adoption of the packaging library.</span>
+    <span class="n">parts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">_parse_version_parts</span><span class="p">(</span><span class="n">version</span><span class="o">.</span><span class="n">lower</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">part</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"*"</span><span class="p">):</span>
+            <span class="c1"># remove "-" before a prerelease tag</span>
+            <span class="k">if</span> <span class="n">part</span> <span class="o">&lt;</span> <span class="s2">"*final"</span><span class="p">:</span>
+                <span class="k">while</span> <span class="n">parts</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"*final-"</span><span class="p">:</span>
+                    <span class="n">parts</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+            <span class="c1"># remove trailing zeros from each series of numeric parts</span>
+            <span class="k">while</span> <span class="n">parts</span> <span class="ow">and</span> <span class="n">parts</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"00000000"</span><span class="p">:</span>
+                <span class="n">parts</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="LooseSpecifier">
+<a class="viewcode-back" href="../../specifiers.html#verspec.loose.LooseSpecifier">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LooseSpecifier</span><span class="p">(</span><span class="n">IndividualSpecifier</span><span class="p">):</span>
+    <span class="n">_regex_str</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"""</span>
+<span class="s2">        (?P&lt;operator&gt;(==|!=|&lt;=|&gt;=|&lt;|&gt;))</span>
+<span class="s2">        \s*</span>
+<span class="s2">        (?P&lt;version&gt;</span>
+<span class="s2">            [^,;\s)]* # Since this is a "loose" specifier, and the version</span>
+<span class="s2">                      # string can be just about anything, we match everything</span>
+<span class="s2">                      # except for whitespace, a semi-colon for marker support,</span>
+<span class="s2">                      # a closing paren since versions can be enclosed in</span>
+<span class="s2">                      # them, and a comma since it's a version separator.</span>
+<span class="s2">        )</span>
+<span class="s2">        """</span>
+
+    <span class="n">_regex</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s2">"^\s*"</span> <span class="o">+</span> <span class="n">_regex_str</span> <span class="o">+</span> <span class="sa">r</span><span class="s2">"\s*$"</span><span class="p">,</span>
+                        <span class="n">re</span><span class="o">.</span><span class="n">VERBOSE</span> <span class="o">|</span> <span class="n">re</span><span class="o">.</span><span class="n">IGNORECASE</span><span class="p">)</span>
+
+    <span class="n">_operators</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"=="</span><span class="p">:</span> <span class="s2">"equal"</span><span class="p">,</span>
+        <span class="s2">"!="</span><span class="p">:</span> <span class="s2">"not_equal"</span><span class="p">,</span>
+        <span class="s2">"&lt;="</span><span class="p">:</span> <span class="s2">"less_than_equal"</span><span class="p">,</span>
+        <span class="s2">"&gt;="</span><span class="p">:</span> <span class="s2">"greater_than_equal"</span><span class="p">,</span>
+        <span class="s2">"&lt;"</span><span class="p">:</span> <span class="s2">"less_than"</span><span class="p">,</span>
+        <span class="s2">"&gt;"</span><span class="p">:</span> <span class="s2">"greater_than"</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_coerce_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LooseVersion</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">LooseVersion</span><span class="p">):</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">version</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">version</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_canonical_spec</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spec</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prospective</span><span class="p">:</span> <span class="n">LooseVersion</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prospective</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_not_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prospective</span><span class="p">:</span> <span class="n">LooseVersion</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prospective</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_less_than_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prospective</span><span class="p">:</span> <span class="n">LooseVersion</span><span class="p">,</span>
+                                 <span class="n">spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prospective</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_greater_than_equal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prospective</span><span class="p">:</span> <span class="n">LooseVersion</span><span class="p">,</span>
+                                    <span class="n">spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prospective</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_less_than</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prospective</span><span class="p">:</span> <span class="n">LooseVersion</span><span class="p">,</span> <span class="n">spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prospective</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compare_greater_than</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prospective</span><span class="p">:</span> <span class="n">LooseVersion</span><span class="p">,</span>
+                              <span class="n">spec</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">prospective</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_coerce_version</span><span class="p">(</span><span class="n">spec</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LooseSpecifierSet">
+<a class="viewcode-back" href="../../specifiers.html#verspec.loose.LooseSpecifierSet">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LooseSpecifierSet</span><span class="p">(</span><span class="n">BaseSpecifierSet</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">specifiers</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Split on , to break each individual specifier into its own item, and</span>
+        <span class="c1"># strip each item to remove leading/trailing whitespace.</span>
+        <span class="n">split_specifiers</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">specifiers</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">","</span><span class="p">)</span>
+                            <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+
+        <span class="c1"># Parse each individual specifier as a LooseSpecifier.</span>
+        <span class="n">parsed</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="n">BaseSpecifier</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">LooseSpecifier</span><span class="p">(</span><span class="n">specifier</span><span class="p">)</span>
+                                         <span class="k">for</span> <span class="n">specifier</span> <span class="ow">in</span> <span class="n">split_specifiers</span><span class="p">)</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parsed</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_coerce_version</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="n">UnparsedVersion</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LooseVersion</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">version</span><span class="p">,</span> <span class="n">LooseVersion</span><span class="p">):</span>
+            <span class="n">version</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">version</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">version</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_filter_prereleases</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">iterable</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">],</span>
+        <span class="n">prereleases</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">UnparsedVersion</span><span class="p">]:</span>
+        <span class="c1"># Note: We ignore prereleases, since LooseVersions are never</span>
+        <span class="c1"># prereleases, and only have that field for compatibility.</span>
+        <span class="k">return</span> <span class="n">iterable</span></div>
+
+
+
+<span class="n">Version</span> <span class="o">=</span> <span class="n">LooseVersion</span>
+<span class="n">Specifier</span> <span class="o">=</span> <span class="n">LooseSpecifier</span>
+<span class="n">SpecifierSet</span> <span class="o">=</span> <span class="n">LooseSpecifierSet</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">verspec</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../version.html">Version Handling</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../specifiers.html">Specifiers</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2014 Jim Porter, Donald Stufft, and individual contributors.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

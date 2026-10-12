@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html lang="en" data-content_root="./">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Version Handling &#8212; verspec 0.2.0.dev0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css?v=27fed22d" />
+    <script src="_static/documentation_options.js?v=130a53a1"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Specifiers" href="specifiers.html" />
+    <link rel="prev" title="verspec Documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+
+  
+  
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="version-handling">
+<h1>Version Handling<a class="headerlink" href="#version-handling" title="Link to this heading">¶</a></h1>
+<p>A core requirement of dealing with packages is the ability to work with
+versions. <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> defines the standard version scheme for Python packages
+which has been implemented by this module.</p>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading">¶</a></h2>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">verspec.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonVersion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="o">=</span> <span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"1.0a5"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v2</span> <span class="o">=</span> <span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span>
+<span class="go">&lt;PythonVersion('1.0a5')&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v2</span>
+<span class="go">&lt;PythonVersion('1.0')&gt;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="o">&lt;</span> <span class="n">v2</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span><span class="o">.</span><span class="n">epoch</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span><span class="o">.</span><span class="n">release</span>
+<span class="go">(1, 0)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span><span class="o">.</span><span class="n">pre</span>
+<span class="go">('a', 5)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span><span class="o">.</span><span class="n">is_prerelease</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v2</span><span class="o">.</span><span class="n">is_prerelease</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"french toast"</span><span class="p">)</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">    </span><span class="o">...</span>
+<span class="gr">InvalidVersion</span>: <span class="n">Invalid version: 'french toast'</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">)</span><span class="o">.</span><span class="n">post</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">)</span><span class="o">.</span><span class="n">is_postrelease</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"1.0.post0"</span><span class="p">)</span><span class="o">.</span><span class="n">post</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"1.0.post0"</span><span class="p">)</span><span class="o">.</span><span class="n">is_postrelease</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</section>
+<section id="reference">
+<h2>Reference<a class="headerlink" href="#reference" title="Link to this heading">¶</a></h2>
+<section id="python-versions">
+<h3>Python Versions<a class="headerlink" href="#python-versions" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">verspec.python.</span></span><span class="sig-name descname"><span class="pre">PythonVersion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/verspec/python.html#PythonVersion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#verspec.python.PythonVersion" title="Link to this definition">¶</a></dt>
+<dd><p>This class abstracts handling of a project’s versions. It implements the
+scheme defined in <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a>. A <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance is
+comparison aware and can be compared and sorted using the standard Python
+interfaces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>version</strong> (<em>str</em>) – The string representation of a version which will be
+parsed and normalized before use.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#verspec.python.InvalidVersion" title="verspec.python.InvalidVersion"><strong>InvalidVersion</strong></a> – If the <code class="docutils literal notranslate"><span class="pre">version</span></code> does not conform to PEP 440 in
+any way then this exception will be raised.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.public">
+<span class="sig-name descname"><span class="pre">public</span></span><a class="headerlink" href="#verspec.python.PythonVersion.public" title="Link to this definition">¶</a></dt>
+<dd><p>A string representing the public version portion of this
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.base_version">
+<span class="sig-name descname"><span class="pre">base_version</span></span><a class="headerlink" href="#verspec.python.PythonVersion.base_version" title="Link to this definition">¶</a></dt>
+<dd><p>A string representing the base version of this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>
+instance. The base version is the public version of the project without
+any pre or post release markers.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.epoch">
+<span class="sig-name descname"><span class="pre">epoch</span></span><a class="headerlink" href="#verspec.python.PythonVersion.epoch" title="Link to this definition">¶</a></dt>
+<dd><p>An integer giving the version epoch of this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>
+instance</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.release">
+<span class="sig-name descname"><span class="pre">release</span></span><a class="headerlink" href="#verspec.python.PythonVersion.release" title="Link to this definition">¶</a></dt>
+<dd><p>A tuple of integers giving the components of the release segment of this
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance; that is, the <code class="docutils literal notranslate"><span class="pre">1.2.3</span></code> part of the
+version number, including trailing zeroes but not including the epoch or
+any prerelease/development/postrelease suffixes</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.major">
+<span class="sig-name descname"><span class="pre">major</span></span><a class="headerlink" href="#verspec.python.PythonVersion.major" title="Link to this definition">¶</a></dt>
+<dd><p>An integer representing the first item of <a class="reference internal" href="#verspec.python.PythonVersion.release" title="verspec.python.PythonVersion.release"><code class="xref py py-attr docutils literal notranslate"><span class="pre">release</span></code></a> or <code class="docutils literal notranslate"><span class="pre">0</span></code> if
+unavailable.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.minor">
+<span class="sig-name descname"><span class="pre">minor</span></span><a class="headerlink" href="#verspec.python.PythonVersion.minor" title="Link to this definition">¶</a></dt>
+<dd><p>An integer representing the second item of <a class="reference internal" href="#verspec.python.PythonVersion.release" title="verspec.python.PythonVersion.release"><code class="xref py py-attr docutils literal notranslate"><span class="pre">release</span></code></a> or <code class="docutils literal notranslate"><span class="pre">0</span></code> if
+unavailable.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.micro">
+<span class="sig-name descname"><span class="pre">micro</span></span><a class="headerlink" href="#verspec.python.PythonVersion.micro" title="Link to this definition">¶</a></dt>
+<dd><p>An integer representing the third item of <a class="reference internal" href="#verspec.python.PythonVersion.release" title="verspec.python.PythonVersion.release"><code class="xref py py-attr docutils literal notranslate"><span class="pre">release</span></code></a> or <code class="docutils literal notranslate"><span class="pre">0</span></code> if
+unavailable.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.local">
+<span class="sig-name descname"><span class="pre">local</span></span><a class="headerlink" href="#verspec.python.PythonVersion.local" title="Link to this definition">¶</a></dt>
+<dd><p>A string representing the local version portion of this
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> if it has one, or <code class="docutils literal notranslate"><span class="pre">None</span></code> otherwise.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.pre">
+<span class="sig-name descname"><span class="pre">pre</span></span><a class="headerlink" href="#verspec.python.PythonVersion.pre" title="Link to this definition">¶</a></dt>
+<dd><p>If this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance represents a prerelease, this
+attribute will be a pair of the prerelease phase (the string <code class="docutils literal notranslate"><span class="pre">&quot;a&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;b&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;rc&quot;</span></code>) and the prerelease number (an integer). If this
+instance is not a prerelease, the attribute will be <cite>None</cite>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.is_prerelease">
+<span class="sig-name descname"><span class="pre">is_prerelease</span></span><a class="headerlink" href="#verspec.python.PythonVersion.is_prerelease" title="Link to this definition">¶</a></dt>
+<dd><p>A boolean value indicating whether this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance
+represents a prerelease and/or development release.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.dev">
+<span class="sig-name descname"><span class="pre">dev</span></span><a class="headerlink" href="#verspec.python.PythonVersion.dev" title="Link to this definition">¶</a></dt>
+<dd><p>If this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance represents a development
+release, this attribute will be the development release number (an
+integer); otherwise, it will be <cite>None</cite>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.is_devrelease">
+<span class="sig-name descname"><span class="pre">is_devrelease</span></span><a class="headerlink" href="#verspec.python.PythonVersion.is_devrelease" title="Link to this definition">¶</a></dt>
+<dd><p>A boolean value indicating whether this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance
+represents a development release.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.post">
+<span class="sig-name descname"><span class="pre">post</span></span><a class="headerlink" href="#verspec.python.PythonVersion.post" title="Link to this definition">¶</a></dt>
+<dd><p>If this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance represents a postrelease, this
+attribute will be the postrelease number (an integer); otherwise, it
+will be <cite>None</cite>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.python.PythonVersion.is_postrelease">
+<span class="sig-name descname"><span class="pre">is_postrelease</span></span><a class="headerlink" href="#verspec.python.PythonVersion.is_postrelease" title="Link to this definition">¶</a></dt>
+<dd><p>A boolean value indicating whether this <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instance
+represents a post-release.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="verspec.python.Version">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">verspec.python.</span></span><span class="sig-name descname"><span class="pre">Version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verspec.python.Version" title="Link to this definition">¶</a></dt>
+<dd><p>An alias for <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="verspec.python.InvalidVersion">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">verspec.python.</span></span><span class="sig-name descname"><span class="pre">InvalidVersion</span></span><a class="reference internal" href="_modules/verspec/baseversion.html#InvalidVersion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#verspec.python.InvalidVersion" title="Link to this definition">¶</a></dt>
+<dd><p>Raised when attempting to create a <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> with a version
+string that does not conform to <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a>.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="verspec.python.VERSION_PATTERN">
+<span class="sig-prename descclassname"><span class="pre">verspec.python.</span></span><span class="sig-name descname"><span class="pre">VERSION_PATTERN</span></span><a class="headerlink" href="#verspec.python.VERSION_PATTERN" title="Link to this definition">¶</a></dt>
+<dd><p>A string containing the regular expression used to match a valid version.
+The pattern is not anchored at either end, and is intended for embedding
+in larger expressions (for example, matching a version number as part of
+a file name). The regular expression should be compiled with the
+<code class="docutils literal notranslate"><span class="pre">re.VERBOSE</span></code> and <code class="docutils literal notranslate"><span class="pre">re.IGNORECASE</span></code> flags set.</p>
+</dd></dl>
+
+</section>
+<section id="loose-versions">
+<h3>Loose Versions<a class="headerlink" href="#loose-versions" title="Link to this heading">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">verspec.loose.</span></span><span class="sig-name descname"><span class="pre">LooseVersion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/verspec/loose.html#LooseVersion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#verspec.loose.LooseVersion" title="Link to this definition">¶</a></dt>
+<dd><p>This class abstracts handling of a version if it is not compatible with the
+scheme defined in <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a>. It implements a similar interface to that of
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>. In addition to supporting pre-<a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> versions,
+this class is useful for handling versions for non-Python projects.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>version</strong> (<em>str</em>) – The string representation of a version which will be
+used as is.</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><a class="reference internal" href="#verspec.loose.LooseVersion" title="verspec.loose.LooseVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">LooseVersion</span></code></a> instances can’t be compared with
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a> instances:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">verspec.python</span><span class="w"> </span><span class="kn">import</span> <span class="n">PythonVersion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">verspec.loose</span><span class="w"> </span><span class="kn">import</span> <span class="n">LooseVersion</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="o">=</span> <span class="n">PythonVersion</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v2</span> <span class="o">=</span> <span class="n">LooseVersion</span><span class="p">(</span><span class="s2">"1.0"</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="o">==</span> <span class="n">v2</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">v1</span> <span class="o">&gt;=</span> <span class="n">v2</span>
+<span class="gt">Traceback (most recent call last):</span>
+<span class="w">  </span><span class="c">...</span>
+<span class="gr">TypeError</span>: <span class="n">'&gt;' not supported between instances of 'PythonVersion' and 'LooseVersion'</span>
+</pre></div>
+</div>
+</div>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.public">
+<span class="sig-name descname"><span class="pre">public</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.public" title="Link to this definition">¶</a></dt>
+<dd><p>A string representing the public version portion of this
+<a class="reference internal" href="#verspec.loose.LooseVersion" title="verspec.loose.LooseVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">LooseVersion</span></code></a>. This will always be the entire version string.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.base_version">
+<span class="sig-name descname"><span class="pre">base_version</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.base_version" title="Link to this definition">¶</a></dt>
+<dd><p>A string representing the base version portion of this
+<a class="reference internal" href="#verspec.loose.LooseVersion" title="verspec.loose.LooseVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">LooseVersion</span></code></a> instance. This will always be the entire version
+string.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.epoch">
+<span class="sig-name descname"><span class="pre">epoch</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.epoch" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">0</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have the
+concept of version epochs.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.release">
+<span class="sig-name descname"><span class="pre">release</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.release" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">None</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have the
+concept of a release segment or its components. It exists primarily for
+compatibility with <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.local">
+<span class="sig-name descname"><span class="pre">local</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.local" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">None</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have the
+concept of a local version. It exists primarily for compatibility with
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.pre">
+<span class="sig-name descname"><span class="pre">pre</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.pre" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">None</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have the
+concept of a prerelease. It exists primarily for compatibility with
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.is_prerelease">
+<span class="sig-name descname"><span class="pre">is_prerelease</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.is_prerelease" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">False</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have
+the concept of a prerelease. It exists primarily for compatibility with
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.dev">
+<span class="sig-name descname"><span class="pre">dev</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.dev" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">None</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have the
+concept of a development release. It exists primarily for compatibility
+with <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.is_devrelease">
+<span class="sig-name descname"><span class="pre">is_devrelease</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.is_devrelease" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">False</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have
+the concept of a development release. It exists primarily for
+compatibility with <a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.post">
+<span class="sig-name descname"><span class="pre">post</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.post" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">None</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have the
+concept of a postrelease. It exists primarily for compatibility with
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="verspec.loose.LooseVersion.is_postrelease">
+<span class="sig-name descname"><span class="pre">is_postrelease</span></span><a class="headerlink" href="#verspec.loose.LooseVersion.is_postrelease" title="Link to this definition">¶</a></dt>
+<dd><p>This will always be <code class="docutils literal notranslate"><span class="pre">False</span></code> since without <a class="reference external" href="https://www.python.org/dev/peps/pep-0440/">PEP 440</a> we do not have
+the concept of a postrelease. It exists primarily for compatibility with
+<a class="reference internal" href="#verspec.python.PythonVersion" title="verspec.python.PythonVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">PythonVersion</span></code></a>’s interface.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="verspec.loose.Version">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">verspec.loose.</span></span><span class="sig-name descname"><span class="pre">Version</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">version</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#verspec.loose.Version" title="Link to this definition">¶</a></dt>
+<dd><p>An alias for <a class="reference internal" href="#verspec.loose.LooseVersion" title="verspec.loose.LooseVersion"><code class="xref py py-class docutils literal notranslate"><span class="pre">LooseVersion</span></code></a>.</p>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">verspec</a></h1>
+
+
+
+
+
+
+
+
+
+<search id="searchbox" style="display: none" role="search">
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Search"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script><h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Version Handling</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reference">Reference</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#python-versions">Python Versions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#loose-versions">Loose Versions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="specifiers.html">Specifiers</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">verspec Documentation</a></li>
+      <li>Next: <a href="specifiers.html" title="next chapter">Specifiers</a></li>
+  </ul></li>
+</ul>
+</div>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &#169;2014 Jim Porter, Donald Stufft, and individual contributors.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 9.1.0</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+      |
+      <a href="_sources/version.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
