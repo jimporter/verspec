@@ -26,10 +26,10 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-test = ["coverage", "flake8 >= 3.7", "flake8-quotes", "mypy",
+test = ["coverage[toml]", "flake8 >= 3.7", "flake8-quotes", "mypy",
         "pytest", "pretend"]
-dev = ["coverage", "flake8 >= 3.7", "flake8-quotes", "ghp-import", "mypy",
-       "pytest", "pretend", "sphinx"]
+dev = ["coverage[toml]", "flake8 >= 3.7", "flake8-quotes", "ghp-import",
+       "mypy", "pytest", "pretend", "sphinx"]
 
 [tool.setuptools.dynamic]
 version = {attr = "inversion.__version__"}
