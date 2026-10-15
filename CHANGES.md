@@ -1,6 +1,6 @@
 # Changes
 
-## v1.0.1 (in progress)
+## v1.0.1 (2026-10-15)
 
 - Fix stray files in distributed packages
 
