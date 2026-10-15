@@ -1,6 +1,10 @@
 BUILDDIR = build
 TESTSUITES =
 
+.PHONY: build
+build:
+	python -m build
+
 .PHONY: coverage
 coverage:
 	coverage run -m pytest $(TESTSUITES)

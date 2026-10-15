@@ -1,5 +1,9 @@
 # Changes
 
+## v1.0.1 (in progress)
+
+- Fix stray files in distributed packages
+
 ## v1.0.0 (2026-10-12)
 
 - Rename project to `inversion` (a much better name, I'm sure you'll agree)
